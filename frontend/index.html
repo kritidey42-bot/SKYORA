@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SKYORA | Weather Intelligence</title>
+
+    <link rel="stylesheet" href="style.css">
+    <!-- SKYORA WORLD MAP -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="topbar">
+
+<a href="#home" class="brand">
+    <span class="brand-icon">☁</span>
+    <span>SKYORA</span>
+</a>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#weather">Weather</a>
+            <a href="#forecast">Forecast</a>
+            <a href="#map">World Map</a>
+            <a href="#reports">Reports</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+<div class="units">
+    <button id="celsiusBtn" class="unit active">°C</button>
+    <button id="fahrenheitBtn" class="unit">°F</button>
+
+    <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">
+        🌙
+    </button>
+</div>
+
+    </header>
+
+
+    <!-- HERO -->
+    <main>
+
+        <section id="home" class="hero">
+
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+
+                <p id="greeting" class="greeting">
+                    Good Night
+                </p>
+
+                <h1>
+                    Weather that understands
+                    <span>your world.</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Real-time weather intelligence, forecasts and
+                    smart insights — all in one place.
+                </p>
+
+
+                <!-- SEARCH -->
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="locationInput"
+                        placeholder="Search for a city..."
+                    >
+
+                    <button id="searchBtn">
+                        Search
+                    </button>
+
+                    <button id="locationBtn">
+                        📍 Use my location
+                    </button>
+
+                </div>
+
+                <p id="locationStatus" class="status"></p>
+
+                <div id="searchResults" class="search-results"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CURRENT WEATHER -->
+        <section id="weather" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">CURRENT CONDITIONS</p>
+
+                    <h2>
+                        Weather right now
+                    </h2>
+                </div>
+
+                <div id="currentLocation" class="location-name">
+                    Chennai
+                </div>
+
+            </div>
+
+
+            <div id="loading" class="loading">
+                Loading weather...
+            </div>
+
+
+            <div id="weatherContent" class="weather-dashboard">
+
+                <!-- MAIN WEATHER CARD -->
+                <div class="current-card">
+                    <button id="favoriteCityBtn" class="favorite-city-btn" title="Add city to favorites">
+    ☆
+</button>
+
+                    <div class="weather-location">
+    <span>📍</span>
+
+    <span id="heroLocation">
+        Chennai
+    </span>
+
+    <span class="live-status">
+        <span class="live-dot"></span>
+        LIVE
+    </span>
+</div>
+
+                    <div id="heroDate" class="date">
+                        Loading date...
+                    </div>
+
+
+                    <div class="temperature-row">
+
+                        <div id="weatherIcon" class="weather-icon">
+                            🌧️
+                        </div>
+
+                        <div>
+                            <span id="temperature">
+                                --
+                            </span>
+
+                            <span id="temperatureUnit">
+                                °C
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <h3 id="condition">
+                        Loading...
+                    </h3>
+
+                   <p id="lastUpdated" class="last-updated">
+    Last updated: --
+</p>
+
+                </div>
+
+
+                <!-- WEATHER DETAILS -->
+                <div class="metrics-grid">
+
+                    <div class="metric-card">
+                        <span class="metric-icon">💧</span>
+                        <p>Humidity</p>
+                        <strong id="humidity">--</strong>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-icon">💨</span>
+                        <p>Wind</p>
+                        <strong id="wind">--</strong>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-icon">⏱️</span>
+                        <p>Pressure</p>
+                        <strong id="pressure">--</strong>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-icon">👁️</span>
+                        <p>Visibility</p>
+                        <strong id="visibility">--</strong>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-icon">🌧️</span>
+                        <p>Rain</p>
+                        <strong id="rain">--</strong>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-icon">☀️</span>
+                        <p>UV Index</p>
+                        <strong id="uv">--</strong>
+                        <small id="uvLevel">--</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SUNRISE / SUNSET -->
+        <section class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">DAYLIGHT</p>
+
+                    <h2>
+                        Sun & sky
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="sun-card">
+
+                <div class="sun-item">
+
+                    <div class="sun-animation sunrise">
+                        ☀️
+                    </div>
+
+                    <div>
+                        <p>Sunrise</p>
+                        <strong id="sunrise">
+                            --
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="sun-path">
+                    <div class="sun-dot"></div>
+                </div>
+
+
+                <div class="sun-item">
+
+                    <div class="sun-animation sunset">
+                        🌅
+                    </div>
+
+                    <div>
+                        <p>Sunset</p>
+                        <strong id="sunset">
+                            --
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HOURLY FORECAST -->
+        <section id="forecast" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">FORECAST</p>
+
+                    <h2>
+                        Hourly forecast
+                    </h2>
+                </div>
+
+                <span class="section-info">
+                    Next 24 hours
+                </span>
+
+            </div>
+
+
+            <div id="hourly" class="forecast-row">
+                <div id="hourly" class="hourly"></div>
+
+                <div class="empty-state">
+                    Hourly forecast will appear here.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DAILY FORECAST -->
+        <section class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">UPCOMING DAYS</p>
+
+                    <h2>
+                        Extended forecast
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="forecast-overview">
+
+    <div class="overview-item">
+        <span class="overview-icon">🌡️</span>
+        <div>
+            <small>Temperature Trend</small>
+            <strong>Changing through the day</strong>
+        </div>
+    </div>
+
+    <div class="overview-item">
+        <span class="overview-icon">🌧️</span>
+        <div>
+            <small>Rain Probability</small>
+            <strong>Check hourly conditions</strong>
+        </div>
+    </div>
+
+    <div class="overview-item">
+        <span class="overview-icon">🌤️</span>
+        <div>
+            <small>5-Day Outlook</small>
+            <strong>Plan your upcoming days</strong>
+        </div>
+    </div>
+
+</div>
+
+
+            <div id="daily" class="daily-grid">
+
+                <div class="empty-state">
+                    Forecast will appear here.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- WEATHER INTELLIGENCE -->
+        <section id="reports" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">SKYORA INTELLIGENCE</p>
+
+                    <h2>
+                        What does today's weather mean?
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div id="insights" class="insights-grid">
+
+                <div class="insight-card">
+                    <span>🌡️</span>
+                    <h3>Temperature</h3>
+                    <p>
+                        Weather insights will appear here.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span>🌧️</span>
+                    <h3>Rain</h3>
+                    <p>
+                        Rain intelligence will appear here.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span>🌬️</span>
+                    <h3>Wind</h3>
+                    <p>
+                        Wind intelligence will appear here.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ALERT -->
+        <section class="section">
+
+            <div id="weatherAlert" class="alert-card">
+
+                <div class="alert-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <p class="section-label">
+                        WEATHER STATUS
+                    </p>
+
+                    <h2 id="alertTitle">
+                        Weather looks normal
+                    </h2>
+
+                    <p id="alertText">
+                        No significant weather conditions detected.
+                    </p>
+
+                </div>
+
+                <span id="alertLevel" class="alert-level">
+                    NORMAL
+                </span>
+
+            </div>
+
+        </section>
+
+
+        
+
+
+
+        <!-- NEWS -->
+        <section id="news" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">WEATHER INTELLIGENCE</p>
+
+                    <h2>
+                        Local weather stories
+                    </h2>
+                </div>
+
+            </div>
+
+
+<div id="newsGrid" class="news-grid">
+
+    <!-- Real news articles will appear here -->
+
+</div>
+
+<div class="news-more-container">
+    <button id="loadMoreNews" class="news-more-btn">
+        View More Stories →
+    </button>
+</div>
+
+        </section>
+
+
+        <!-- CONTACT -->
+        <section id="contact" class="section contact-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">GET IN TOUCH</p>
+
+                    <h2>
+                        Contact SKYORA
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="contact-card">
+
+                <div class="contact-info">
+
+                    <h3>
+                        Help us make SKYORA better.
+                    </h3>
+
+                    <p>
+                        Have feedback, found an issue, or have a feature
+                        suggestion? Tell us.
+                    </p>
+
+                </div>
+
+
+                <form id="contactForm">
+
+                    <input
+                        type="text"
+                        id="contactName"
+                        placeholder="Your name"
+                        required
+                    >
+
+                    <input
+                        type="email"
+                        id="contactEmail"
+                        placeholder="Your email"
+                        required
+                    >
+
+                    <select id="contactCategory">
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                        <option value="feedback">
+                            Feedback
+                        </option>
+
+                        <option value="issue">
+                            Website issue
+                        </option>
+
+                        <option value="weather">
+                            Weather data issue
+                        </option>
+
+                        <option value="alert">
+                            Safety alert issue
+                        </option>
+
+                        <option value="feature">
+                            Feature suggestion
+                        </option>
+
+                    </select>
+
+
+                    <textarea
+                        id="contactMessage"
+                        rows="5"
+                        placeholder="Write your message..."
+                        required
+                    ></textarea>
+
+
+                    <button type="submit">
+                        Send Message
+                    </button>
+
+                </form>
+
+
+
+
+            </div>
+
+        </section>
+            <!-- your existing sections -->
+
+
+    <!-- ==========================================
+         SKYORA WORLD WEATHER MAP
+         ========================================== -->
+
+    <section class="map-section">
+
+        <div class="section-heading">
+            <span class="section-label">WORLD WEATHER</span>
+
+            <h2>Explore Weather Around the World</h2>
+
+            <p>
+                Search a location or explore the map to discover weather
+                conditions around the world.
+            </p>
+        </div>
+
+        <div class="map-toolbar">
+
+            <input
+                type="text"
+                id="mapSearchInput"
+                placeholder="Search a city..."
+            >
+
+            <button id="mapSearchBtn">
+                🔍 Search
+            </button>
+
+            <button id="mapMyLocationBtn">
+                📍 My Location
+            </button>
+
+        </div>
+
+        <div class="map-wrapper">
+
+            <div id="weatherMap"></div>
+
+            <div class="map-info-card" id="mapInfoCard">
+
+                <div class="map-info-title">
+                    Select a location
+                </div>
+
+                <div class="map-info-text">
+                    Click anywhere on the map to explore weather.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+     SKYORA RAIN OUTLOOK
+     ========================================== -->
+
+<section id="rainTimeline" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">RAIN OUTLOOK</p>
+            <h2>Rain in the next few hours</h2>
+        </div>
+
+    </div>
+
+    <div class="rain-timeline-card">
+
+        <div class="rain-timeline-header">
+
+            <div>
+                <span class="rain-timeline-icon">🌧️</span>
+
+                <strong id="rainTimelineTitle">
+                    Checking rain conditions...
+                </strong>
+            </div>
+
+            <span id="rainTimelineSummary">--</span>
+
+        </div>
+
+        <div id="rainTimelineItems"
+             class="rain-timeline-items">
+
+            <div class="rain-timeline-empty">
+                Weather forecast will appear here.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     SKYORA WEATHER TRENDS
+     ========================================== -->
+
+<section id="weatherTrends" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">WEATHER TRENDS</p>
+
+            <h2>Weather changes through the day</h2>
+
+            <p>
+                Visualize temperature and rain probability
+                for the upcoming hours.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="weather-chart-card">
+
+        <div class="chart-header">
+
+            <div>
+                <span class="chart-icon">📊</span>
+
+                <strong>
+                    Hourly weather trend
+                </strong>
+            </div>
+
+            <span id="chartLocation">
+                --
+            </span>
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas id="weatherTrendChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     SKYORA WEATHER HISTORY
+     ========================================== -->
+
+<section id="weatherHistory" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">WEATHER HISTORY</p>
+
+            <h2>What was the weather like?</h2>
+
+            <p>
+                Explore recent weather conditions for
+                the selected location.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="history-card">
+
+        <div class="history-header">
+
+            <div>
+                <span class="history-icon">🕰️</span>
+
+                <strong>
+                    Recent weather history
+                </strong>
+            </div>
+
+            <span id="historyLocation">
+                --
+            </span>
+
+        </div>
+
+        <div
+            id="historyItems"
+            class="history-items"
+        >
+
+            <div class="history-empty">
+                Past weather data will appear here.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     SKYORA SEARCH HISTORY
+     ========================================== -->
+
+<section id="searchHistory" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">RECENT SEARCHES</p>
+
+            <h2>Your recently searched cities</h2>
+
+            <p>
+                Quickly return to locations you recently checked.
+            </p>
+        </div>
+
+    </div>
+
+    <div id="recentSearches" class="recent-searches">
+
+        <div class="recent-search-empty">
+            Your recent searches will appear here.
+        </div>
+
+    </div>
+
+</section>
+   
+<!-- ==========================================
+     SKYORA CITY COMPARISON
+     ========================================== -->
+
+<section id="cityComparison" class="section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">CITY COMPARISON</p>
+
+            <h2>Compare two locations</h2>
+
+            <p>
+                Compare current weather conditions
+                between two cities.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="comparison-card">
+
+        <div class="comparison-inputs">
+
+            <div class="comparison-input-group">
+                <label for="compareCityOne">
+                    First city
+                </label>
+
+                <input
+                    type="text"
+                    id="compareCityOne"
+                    placeholder="Enter first city"
+                >
+            </div>
+
+            <div class="comparison-vs">
+                VS
+            </div>
+
+            <div class="comparison-input-group">
+                <label for="compareCityTwo">
+                    Second city
+                </label>
+
+                <input
+                    type="text"
+                    id="compareCityTwo"
+                    placeholder="Enter second city"
+                >
+            </div>
+
+        </div>
+
+        <button
+            id="compareCitiesBtn"
+            class="compare-cities-btn"
+        >
+            Compare Cities
+        </button>
+
+        <div
+            id="comparisonResults"
+            class="comparison-results"
+        >
+
+            <div class="comparison-empty">
+                Enter two cities to compare their weather.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+    </main>
+
+
+<!-- BACK TO TOP -->
+<button id="backToTop" class="back-to-top" title="Back to top">
+    ↑
+</button>
+
+<!-- FOOTER -->
+<footer>
+
+        <div class="footer-brand">
+            ☁ SKYORA
+        </div>
+
+        <p>
+            Weather intelligence for a smarter day.
+        </p>
+
+        <p class="copyright">
+            © 2026 SKYORA. All rights reserved.
+        </p>
+
+    </footer>
+
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- JAVASCRIPT -->
+<script src="script.js"></script>
+
+</body>
+</html>
