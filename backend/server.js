@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
 
@@ -203,7 +206,7 @@ const url =
 
 // ==========================================
 
-app.post("/api/contact", (req, res) => {
+app.post("/api/contact", async (req, res) => {
 
     const {
         name,
@@ -218,18 +221,45 @@ app.post("/api/contact", (req, res) => {
         });
     }
 
-    console.log("================================");
-    console.log("SKYORA CONTACT MESSAGE");
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Category:", category);
-    console.log("Message:", message);
-    console.log("================================");
+    try {
 
-    res.json({
-        success: true,
-        message: "Your message has been received."
-    });
+        console.log("================================");
+        console.log("SKYORA CONTACT MESSAGE");
+        console.log("Name:", name);
+        console.log("Email:", email);
+        console.log("Category:", category);
+        console.log("Message:", message);
+        console.log("================================");
+
+        await resend.emails.send({
+            from: "SKYORA <onboarding@resend.dev>",
+            to: ["kritidey42@gmail.com"],
+            subject: `New SKYORA Feedback - ${category}`,
+            html: `
+                <h2>New SKYORA Feedback</h2>
+
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Category:</strong> ${category}</p>
+
+                <h3>Message:</h3>
+                <p>${message}</p>
+            `
+        });
+
+        res.json({
+            success: true,
+            message: "Your message has been received."
+        });
+
+    } catch (error) {
+
+        console.error("Email sending error:", error);
+
+        res.status(500).json({
+            error: "Your message could not be sent. Please try again."
+        });
+    }
 });
 
 // ==========================================
