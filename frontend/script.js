@@ -672,7 +672,7 @@ async function loadWeather(city) {
 
 
 const response = await fetch(
-    `https://skyora-1.onrender.com/api/weather?city=${encodeURIComponent(city)}`
+    `https://skyora-1.onrender.comhttps://skyora-1.onrender.com/api/weather?city=${encodeURIComponent(city)}`
 );
 
         const data = await response.json();
@@ -1330,7 +1330,7 @@ async function searchMapLocation() {
     try {
 
         const response = await fetch(
-            `https://skyora-1.onrender.com/api/weather?city=${encodeURIComponent(city)}`
+            `https://skyora-1.onrender.comhttps://skyora-1.onrender.com/api/weather?city=${encodeURIComponent(city)}`
         );
 
         const data = await response.json();
@@ -2568,7 +2568,7 @@ async function compareWeatherCity(city) {
 
     const response = await fetch(
         `
-        /api/weather?city=${encodeURIComponent(city)}`
+        https://skyora-1.onrender.com/api/weather?city=${encodeURIComponent(city)}`
     );
 
     const data = await response.json();
